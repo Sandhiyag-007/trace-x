@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TRACE-X Transaction Graph</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 15px;
+            margin: 0;
+        }
+
+        .hint {
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        #graph {
+            width: 100%;
+            height: 65vh;
+            background: #020617;
+        }
+
+        line {
+            stroke: #64748b;
+            stroke-width: 2;
+        }
+
+        circle {
+            cursor: pointer;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        circle:hover {
+            stroke: #22c55e;
+            stroke-width: 5;
+        }
+
+        text {
+            fill: white;
+            font-size: 13px;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        #details {
+            margin: 15px auto;
+            padding: 20px;
+            max-width: 850px;
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .high {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: #facc15;
+            font-weight: bold;
+        }
+
+        .safe {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .tx {
+            background: #0f172a;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 7px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #475569;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🔎 TRACE-X — Bitcoin Transaction Graph</h1>
+
+<p class="hint">
+    Click any wallet circle to investigate
+</p>
+
+<svg id="graph"></svg>
+
+<div id="details">
+    <b>🔎 Wallet Investigation</b>
+    <p>Click a wallet circle to begin investigation.</p>
+</div>
+
+<script>
+
+fetch("/graph")
+.then(response => response.json())
+.then(data => {
+
+    const svg = document.getElementById("graph");
+    const details = document.getElementById("details");
+
+    const pos = {};
+
+    /*
+     * Create wallet positions
+     */
+    data.nodes.forEach((node, index) => {
+
+        pos[node.id] = {
+            x: 120 + (index % 5) * 180,
+            y: 100 + Math.floor(index / 5) * 150
+        };
+
+    });
+
+
+    /*
+     * Draw transaction connections
+     */
+    data.edges.forEach(edge => {
+
+        const line = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "line"
+        );
+
+        line.setAttribute("x1", pos[edge.source].x);
+        line.setAttribute("y1", pos[edge.source].y);
+
+        line.setAttribute("x2", pos[edge.target].x);
+        line.setAttribute("y2", pos[edge.target].y);
+
+        svg.appendChild(line);
+
+    });
+
+
+    /*
+     * Draw wallet circles
+     */
+    data.nodes.forEach(node => {
+
+        const circle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+        );
+
+        circle.setAttribute("cx", pos[node.id].x);
+        circle.setAttribute("cy", pos[node.id].y);
+        circle.setAttribute("r", 28);
+
+        circle.setAttribute(
+            "fill",
+            node.risk >= 60 ? "#ef4444" : "#2563eb"
+        );
+
+
+        /*
+         * Wallet investigation
+         */
+        circle.addEventListener("click", function () {
+
+            const txs = data.edges.filter(
+                edge =>
+                    edge.source === node.id ||
+                    edge.target === node.id
+            );
+
+            let riskClass = "safe";
+            let riskText = "Low Risk";
+
+            if (node.risk >= 80) {
+                riskClass = "high";
+                riskText = "Critical Risk";
+            }
+            else if (node.risk >= 60) {
+                riskClass = "high";
+                riskText = "High Risk";
+            }
+            else if (node.risk >= 30) {
+                riskClass = "medium";
+                riskText = "Medium Risk";
+            }
+
+
+            /*
+             * Calculate total transaction value
+             */
+            let totalAmount = 0;
+
+            txs.forEach(tx => {
+                totalAmount += Number(tx.amount) || 0;
+            });
+
+
+            /*
+             * Investigation profile
+             */
+            let html = "";
+
+            html += "<h2>🔎 Wallet Investigation</h2>";
+
+            html +=
+                "<p><b>Wallet:</b> " +
+                node.id +
+                "</p>";
+
+            html +=
+                "<p><b>Risk Score:</b> " +
+                "<span class='" +
+                riskClass +
+                "'>" +
+                node.risk +
+                "/100</span></p>";
+
+            html +=
+                "<p><b>Risk Level:</b> " +
+                "<span class='" +
+                riskClass +
+                "'>" +
+                riskText +
+                "</span></p>";
+
+            html +=
+                "<p><b>Connected Transactions:</b> " +
+                txs.length +
+                "</p>";
+
+            html +=
+                "<p><b>Total Transaction Value:</b> " +
+                totalAmount.toFixed(2) +
+                " BTC</p>";
+
+            html += "<hr>";
+
+            /*
+             * AI-style investigation explanation
+             */
+            if (node.risk >= 80) {
+
+                html +=
+                    "<p><b>🧠 AI Explanation:</b> " +
+                    "This wallet shows multiple high-risk indicators " +
+                    "and should be prioritized for immediate investigation." +
+                    "</p>";
+
+            }
+            else if (node.risk >= 60) {
+
+                html +=
+                    "<p><b>🧠 AI Explanation:</b> " +
+                    "This wallet shows suspicious transaction behaviour " +
+                    "and requires further investigation." +
+                    "</p>";
+
+            }
+            else if (node.risk >= 30) {
+
+                html +=
+                    "<p><b>🧠 AI Explanation:</b> " +
+                    "The wallet shows some unusual activity. " +
+                    "Continue monitoring for additional evidence." +
+                    "</p>";
+
+            }
+            else {
+
+                html +=
+                    "<p><b>🧠 AI Explanation:</b> " +
+                    "No major suspicious behaviour was identified " +
+                    "by the current risk analysis." +
+                    "</p>";
+
+            }
+
+
+            /*
+             * Hidden transaction section
+             */
+            html +=
+                "<button onclick='showTransactions()'>" +
+                "📄 View Transactions" +
+                "</button>";
+
+            html +=
+                "<div id='transactions' style='display:none; margin-top:15px;'>";
+
+            html += "<h3>Connected Transactions</h3>";
+
+            txs.forEach(tx => {
+
+                html +=
+                    "<div class='tx'>" +
+                    "<b>TXID:</b> " +
+                    tx.txid +
+                    "<br>" +
+                    "<b>From:</b> " +
+                    tx.source +
+                    "<br>" +
+                    "<b>To:</b> " +
+                    tx.target +
+                    "<br>" +
+                    "<b>Amount:</b> " +
+                    tx.amount +
+                    " BTC" +
+                    "</div>";
+
+            });
+
+            html += "</div>";
+
+            details.innerHTML = html;
+
+        });
+
+
+        svg.appendChild(circle);
+
+
+        /*
+         * Wallet label
+         */
+        const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+        );
+
+        text.setAttribute(
+            "x",
+            pos[node.id].x
+        );
+
+        text.setAttribute(
+            "y",
+            pos[node.id].y + 5
+        );
+
+        text.textContent = node.id;
+
+        svg.appendChild(text);
+
+    });
+
+});
+
+
+/*
+ * Show transactions only when requested
+ */
+function showTransactions() {
+
+    const box = document.getElementById("transactions");
+
+    if (box.style.display === "none") {
+
+        box.style.display = "block";
+
+    }
+    else {
+
+        box.style.display = "none";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,150 +1,1194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TRACE-X | Crypto Investigation Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f8;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        header {
-            background: #111827;
-            color: white;
-            padding: 20px 30px;
-        }
+<title>TRACE-X | Crypto Crime Investigation</title>
 
-        header h1 {
-            margin: 0;
-        }
+<style>
+*{
+    box-sizing:border-box;
+}
 
-        .subtitle {
-            margin-top: 6px;
-            color: #cbd5e1;
-        }
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#080d18;
+    color:#e8eef8;
+}
 
-        .cards {
-            display: flex;
-            gap: 20px;
-            padding: 25px;
-            flex-wrap: wrap;
-        }
+header{
+    background:linear-gradient(135deg,#0b1222,#111d35);
+    padding:22px 35px;
+    border-bottom:1px solid #263653;
+}
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            min-width: 180px;
-            box-shadow: 0 2px 8px #0001;
-        }
+.brand{
+    font-size:28px;
+    font-weight:800;
+    letter-spacing:2px;
+}
 
-        .card h3 {
-            margin: 0 0 10px;
-        }
+.subtitle{
+    color:#91a4c4;
+    margin-top:5px;
+}
 
-        .card p {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 0;
-        }
+.status{
+    float:right;
+    margin-top:-35px;
+    color:#62e6a5;
+    font-size:13px;
+}
 
-        .section {
-            background: white;
-            margin: 0 25px 25px;
-            padding: 20px;
-            border-radius: 10px;
-        }
+.container{
+    padding:25px 35px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
 
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
+.card{
+    background:#101827;
+    border:1px solid #253653;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
 
-        th {
-            background: #f1f5f9;
-        }
-    </style>
+.card h4{
+    margin:0;
+    color:#8fa4c6;
+    font-size:13px;
+}
+
+.value{
+    font-size:28px;
+    font-weight:800;
+    margin-top:10px;
+}
+
+.red{color:#ff6378}
+.orange{color:#ffb45c}
+.green{color:#61e6a5}
+.blue{color:#65b8ff}
+
+.section{
+    margin-top:25px;
+}
+
+.section-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:14px;
+}
+
+.search{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.search input{
+    flex:1;
+    padding:13px;
+    background:#0b1322;
+    border:1px solid #2b405f;
+    border-radius:9px;
+    color:white;
+}
+
+button{
+    padding:12px 18px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.search button{
+    background:#328cff;
+    color:white;
+}
+
+.clear-btn{
+    background:#263653;
+    color:white;
+}
+
+.alert-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.alert-box{
+    padding:15px;
+    border-radius:10px;
+    background:#0b1322;
+    border:1px solid #263653;
+}
+
+.alert-number{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.table-wrap{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:13px;
+    text-align:left;
+    border-bottom:1px solid #22304a;
+}
+
+th{
+    color:#8fa4c6;
+    font-size:12px;
+}
+
+tr:hover{
+    background:#151f32;
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.critical{
+    background:#5b1723;
+    color:#ff8090;
+}
+
+.high{
+    background:#56351a;
+    color:#ffc06b;
+}
+
+.medium{
+    background:#504516;
+    color:#ffe477;
+}
+
+.low{
+    background:#123b2c;
+    color:#68e6a6;
+}
+
+.graph{
+    background:#0b101c;
+    border:1px solid #263653;
+    border-radius:14px;
+    overflow:hidden;
+}
+
+iframe{
+    width:100%;
+    height:650px;
+    border:0;
+}
+
+.flow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+}
+
+.node{
+    background:#13233b;
+    border:1px solid #3974b8;
+    padding:12px 16px;
+    border-radius:9px;
+}
+
+.arrow{
+    color:#65b8ff;
+    font-size:20px;
+}
+
+.report{
+    white-space:pre-wrap;
+    background:#060b13;
+    border:1px solid #263653;
+    padding:18px;
+    border-radius:10px;
+    color:#b9c8dd;
+    min-height:100px;
+}
+
+.result{
+    margin-top:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#61728f;
+    font-size:12px;
+}
+
+@media(max-width:900px){
+    .grid,
+    .alert-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+    .grid,
+    .alert-grid{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        padding:15px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    <h1>TRACE-X</h1>
+
+    <div class="brand">TRACE-X</div>
+
     <div class="subtitle">
-        AI-Powered Bitcoin Transaction Investigation & Early Warning
+        AI-Powered Crypto Crime Investigation & Early-Warning Platform
     </div>
+
+    <div class="status">
+        ● SYSTEM ONLINE
+    </div>
+
 </header>
 
-<div class="cards">
+
+<div class="container">
+
+
+<!-- ================= KPI DASHBOARD ================= -->
+
+<div class="grid">
+
     <div class="card">
-        <h3>Total Transactions</h3>
-        <p id="total">-</p>
+        <h4>TOTAL TRANSACTIONS</h4>
+        <div class="value blue" id="total">0</div>
     </div>
 
     <div class="card">
-        <h3>Suspicious</h3>
-        <p id="suspicious">-</p>
+        <h4>HIGH-RISK TRANSACTIONS</h4>
+        <div class="value red" id="highRisk">0</div>
     </div>
 
     <div class="card">
-        <h3>Critical Alerts</h3>
-        <p id="critical">-</p>
+        <h4>CRITICAL ALERTS</h4>
+        <div class="value red" id="critical">0</div>
     </div>
+
+    <div class="card">
+        <h4>MONITORED WALLETS</h4>
+        <div class="value green" id="wallets">0</div>
+    </div>
+
 </div>
+
+
+<!-- ================= INVESTIGATION SEARCH ================= -->
 
 <div class="section">
-    <h2>Transaction Intelligence</h2>
 
-    <table>
-        <thead>
-            <tr>
-                <th>TXID</th>
-                <th>Source IP</th>
-                <th>Wallet</th>
-                <th>Amount</th>
-                <th>Fee</th>
-            </tr>
-        </thead>
+    <div class="section-title">
+        🔎 Investigation Search
+    </div>
 
-        <tbody id="transactions"></tbody>
-    </table>
+    <div class="search">
+
+        <input
+            id="searchBox"
+            type="text"
+            placeholder="Search TXID, wallet, IP address, risk level..."
+        >
+
+        <button onclick="searchData()">
+            SEARCH
+        </button>
+
+        <button class="clear-btn" onclick="clearSearch()">
+            CLEAR
+        </button>
+
+    </div>
+
+    <div id="searchResult" class="result"></div>
+
 </div>
 
+
+<!-- ================= AI RISK INTELLIGENCE ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+        🤖 AI Risk & Alert Intelligence
+    </div>
+
+    <div class="alert-grid">
+
+        <div class="alert-box">
+            <div class="alert-number red" id="criticalCount">0</div>
+            <div>Critical</div>
+        </div>
+
+        <div class="alert-box">
+            <div class="alert-number orange" id="highCount">0</div>
+            <div>High</div>
+        </div>
+
+        <div class="alert-box">
+            <div class="alert-number" id="mediumCount">0</div>
+            <div>Medium</div>
+        </div>
+
+        <div class="alert-box">
+            <div class="alert-number green" id="lowCount">0</div>
+            <div>Low</div>
+        </div>
+
+    </div>
+
+</div>
+<div class="section">
+    <h2>📊 Investigation Analytics</h2>
+    <div id="investigationAnalytics">
+        <p>Loading investigation analytics...</p>
+    </div>
+</div>
+
+
+<!-- ================= RANKED ALERTS ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+        🚨 Ranked Investigation Alerts
+    </div>
+
+    <div class="card table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>TXID</th>
+                    <th>WALLET</th>
+                    <th>RISK</th>
+                    <th>LEVEL</th>
+                    <th>CONFIDENCE</th>
+                    <th>REASONS</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="alertsTable"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TRANSACTION INTELLIGENCE ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+        💳 Transaction Intelligence
+    </div>
+
+    <div class="card table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>TXID</th>
+                    <th>SOURCE IP</th>
+                    <th>WALLET</th>
+                    <th>AMOUNT</th>
+                    <th>FEE</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="transactions"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MONEY FLOW ================= -->
+<section>
+    <h2>🌐 Network + Blockchain Correlation</h2>
+    <div id="networkCorrelation">
+        <p>Loading network and blockchain correlation...</p>
+    </div>
+</section>
+<section>
+    <h2>⚡ Early-Warning Detection</h2>
+    <div id="earlyWarning">
+        <p>Loading early-warning alerts...</p>
+    </div>
+</section>
+<div class="section">
+
+    <div class="section-title">
+        💰 Money Flow Visualization
+    </div>
+
+    <div class="card">
+
+        <div id="moneyFlow" class="flow">
+            Loading transaction flow...
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= BITCOIN GRAPH ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+        🕸️ Bitcoin Transaction Graph
+    </div>
+
+    <div class="graph">
+
+        <iframe src="/graph-view"></iframe>
+
+    </div>
+
+</div>
+
+
+<!-- ================= INVESTIGATION REPORT ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+        📄 Investigation Report
+    </div>
+
+    <div class="card">
+
+        <button onclick="generateReport()">
+            GENERATE SUMMARY
+        </button>
+
+        <button class="clear-btn" onclick="downloadReport()">
+            EXPORT REPORT
+        </button>
+
+        <br><br>
+
+        <div id="report" class="report">
+            No investigation report generated.
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<footer>
+    TRACE-X • Offline AI-Powered Bitcoin Transaction Investigation System
+</footer>
+
+
 <script>
-fetch("http://127.0.0.1:5000/transactions")
-    .then(response => response.json())
-    .then(data => {
 
-        document.getElementById("total").textContent = data.length;
+let transactions = [];
+let alerts = [];
+let investigationReport = "";
 
-        document.getElementById("suspicious").textContent = "AI Analysis";
 
-        document.getElementById("critical").textContent = "Risk Engine";
+/* ================= LOAD DATA ================= */
 
-        const table = document.getElementById("transactions");
+async function loadData(){
 
-        data.forEach(tx => {
+    try{
+
+        const txResponse = await fetch("/transactions");
+
+        transactions = await txResponse.json();
+
+        document.getElementById("total").textContent =
+            transactions.length;
+
+
+        const walletSet = new Set(
+            transactions
+                .map(tx => tx.wallet || tx.input_address)
+                .filter(Boolean)
+        );
+
+        document.getElementById("wallets").textContent =
+            walletSet.size;
+
+
+        const txTable =
+            document.getElementById("transactions");
+
+        txTable.innerHTML = "";
+
+
+        transactions.forEach(tx => {
+
             const row = document.createElement("tr");
 
             row.innerHTML = `
-                <td>${tx.txid}</td>
-                <td>${tx.src_ip}</td>
-                <td>${tx.input_address}</td>
-                <td>${tx.output_amount}</td>
-                <td>${tx.fee}</td>
+                <td>${tx.txid || "-"}</td>
+                <td>${tx.src_ip || "-"}</td>
+                <td>${tx.wallet || tx.input_address || "-"}</td>
+                <td>${tx.amount ?? tx.output_amount ?? "-"}</td>
+                <td>${tx.fee ?? "-"}</td>
             `;
 
-            table.appendChild(row);
+            txTable.appendChild(row);
+
         });
+
+
+        buildMoneyFlow();
+
+
+    }catch(error){
+
+        console.error(
+            "Transaction loading error:",
+            error
+        );
+
+    }
+
+
+    try{
+
+        const alertResponse =
+            await fetch("/alerts");
+
+        alerts = await alertResponse.json();
+
+        updateAlerts();
+
+
+    }catch(error){
+
+        console.error(
+            "Alert loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ================= ALERTS ================= */
+
+function updateAlerts(){
+
+    let critical = 0;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
+
+
+    alerts.forEach(a => {
+
+        const level =
+            (a.level || "Low").toLowerCase();
+
+
+        if(level === "critical")
+            critical++;
+
+        else if(level === "high")
+            high++;
+
+        else if(level === "medium")
+            medium++;
+
+        else
+            low++;
+
     });
+
+
+    document.getElementById("criticalCount")
+        .textContent = critical;
+
+    document.getElementById("highCount")
+        .textContent = high;
+
+    document.getElementById("mediumCount")
+        .textContent = medium;
+
+    document.getElementById("lowCount")
+        .textContent = low;
+
+
+    document.getElementById("critical")
+        .textContent = critical;
+
+    document.getElementById("highRisk")
+        .textContent = critical + high;
+
+
+    const table =
+        document.getElementById("alertsTable");
+
+    table.innerHTML = "";
+
+
+    alerts.forEach(a => {
+
+        const level =
+            (a.level || "Low").toLowerCase();
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+            <td>${a.txid || "-"}</td>
+            <td>${a.wallet || "-"}</td>
+            <td>${a.risk ?? "-"}</td>
+            <td>
+                <span class="badge ${level}">
+                    ${a.level || "Low"}
+                </span>
+            </td>
+            <td>${a.confidence ?? "-"}%</td>
+            <td>${(a.reasons || []).join(", ") || "-"}</td>
+        `;
+
+
+        row.style.cursor = "pointer";
+
+        row.onclick = function(){
+            showAlertDetails(a);
+        };
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+/* ================= ALERT DETAILS ================= */
+
+function showAlertDetails(a){
+
+    alert(
+        "TRACE-X ALERT DETAILS\n\n" +
+
+        "Transaction: " +
+        (a.txid || "-") +
+
+        "\nWallet: " +
+        (a.wallet || "-") +
+
+        "\nRisk Score: " +
+        (a.risk ?? "-") +
+
+        "\nAlert Level: " +
+        (a.level || "-") +
+
+        "\nConfidence: " +
+        (a.confidence ?? "-") +
+        "%" +
+
+        "\nReliability: " +
+        (a.reliability || "-") +
+
+        "\nSource IP: " +
+        (a.src_ip || "-") +
+
+        "\nDestination IP: " +
+        (a.dst_ip || "-") +
+
+        "\nAmount: " +
+        (a.amount ?? "-") +
+
+        "\nReasons: " +
+        ((a.reasons || []).join(", ") || "-")
+    );
+
+}
+
+
+/* ================= SEARCH ================= */
+
+function searchData(){
+
+    const query =
+        document
+            .getElementById("searchBox")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const result =
+        document.getElementById("searchResult");
+
+
+    if(!query){
+
+        result.innerHTML = "";
+
+        return;
+
+    }
+
+
+    const txMatches =
+        transactions.filter(tx => {
+
+            return Object.entries(tx).some(
+                ([key,value]) =>
+                    String(value)
+                        .toLowerCase()
+                        .includes(query)
+            );
+
+        });
+
+
+    const alertMatches =
+        alerts.filter(a => {
+
+            return Object.entries(a).some(
+                ([key,value]) =>
+                    String(value)
+                        .toLowerCase()
+                        .includes(query)
+            );
+
+        });
+
+
+    result.innerHTML = `
+
+        <div class="card">
+
+            <b>Investigation Match Found</b>
+
+            <br><br>
+
+            Transactions matched:
+            ${txMatches.length}
+
+            <br>
+
+            Alerts matched:
+            ${alertMatches.length}
+
+        </div>
+
+    `;
+
+}
+
+
+/* ================= CLEAR SEARCH ================= */
+
+function clearSearch(){
+
+    document.getElementById("searchBox").value = "";
+
+    document.getElementById("searchResult").innerHTML = "";
+
+}
+
+
+/* ================= MONEY FLOW ================= */
+
+function buildMoneyFlow(){
+
+    const container =
+        document.getElementById("moneyFlow");
+
+
+    container.innerHTML = "";
+
+
+    if(!transactions.length){
+
+        container.textContent =
+            "No transaction flow available.";
+
+        return;
+
+    }
+
+
+    const flow = document.createElement("div");
+
+    flow.className = "flow";
+
+
+    transactions.forEach((tx,index) => {
+
+        const input =
+            tx.input_address || tx.wallet || "Unknown";
+
+        const output =
+            tx.output_address || "Unknown";
+
+
+        const inputNode =
+            document.createElement("div");
+
+        inputNode.className = "node";
+
+        inputNode.textContent =
+            input;
+
+
+        const arrow =
+            document.createElement("div");
+
+        arrow.className = "arrow";
+
+        arrow.textContent = "→";
+
+
+        const outputNode =
+            document.createElement("div");
+
+        outputNode.className = "node";
+
+        outputNode.textContent =
+            output;
+
+
+        flow.appendChild(inputNode);
+
+        flow.appendChild(arrow);
+
+        flow.appendChild(outputNode);
+
+
+        if(index < transactions.length - 1){
+
+            const separator =
+                document.createElement("div");
+
+            separator.style.width = "100%";
+
+            flow.appendChild(separator);
+
+        }
+
+    });
+
+
+    container.appendChild(flow);
+
+}
+
+
+/* ================= INVESTIGATION REPORT ================= */
+
+async function generateReport(){
+
+    const report =
+        document.getElementById("report");
+
+
+    report.textContent =
+        "Generating investigation summary...";
+
+
+    try{
+
+        const response =
+            await fetch("/investigation-summary");
+
+
+        if(response.ok){
+
+            const data =
+                await response.json();
+
+
+            investigationReport =
+                data.summary ||
+                data.report ||
+                JSON.stringify(data,null,2);
+
+
+        }else{
+
+            investigationReport =
+                buildLocalReport();
+
+        }
+
+
+    }catch(error){
+
+        investigationReport =
+            buildLocalReport();
+
+    }
+
+
+    report.textContent =
+        investigationReport;
+
+}
+
+
+/* ================= LOCAL REPORT FALLBACK ================= */
+
+function buildLocalReport(){
+
+    const highRisk =
+        alerts.filter(a =>
+            ["high","critical"]
+            .includes(
+                (a.level || "").toLowerCase()
+            )
+        );
+
+
+    let text =
+        "TRACE-X INVESTIGATION REPORT\n\n";
+
+
+    text +=
+        "Total Transactions: " +
+        transactions.length +
+        "\n";
+
+
+    text +=
+        "Monitored Wallets: " +
+        new Set(
+            transactions.map(
+                tx =>
+                    tx.input_address ||
+                    tx.wallet
+            )
+        ).size +
+        "\n";
+
+
+    text +=
+        "High/Critical Alerts: " +
+        highRisk.length +
+        "\n\n";
+
+
+    text +=
+        "SUSPICIOUS TRANSACTIONS\n\n";
+
+
+    highRisk.forEach(a => {
+
+        text +=
+            "TXID: " +
+            (a.txid || "-") +
+            "\n";
+
+        text +=
+            "Wallet: " +
+            (a.wallet || "-") +
+            "\n";
+
+        text +=
+            "Risk: " +
+            (a.risk ?? "-") +
+            "\n";
+
+        text +=
+            "Level: " +
+            (a.level || "-") +
+            "\n";
+
+        text +=
+            "Reasons: " +
+            ((a.reasons || []).join(", ") || "-") +
+            "\n\n";
+
+    });
+
+
+    return text;
+
+}
+
+
+/* ================= EXPORT REPORT ================= */
+
+function downloadReport(){
+
+    if(!investigationReport){
+
+        investigationReport =
+            buildLocalReport();
+
+    }
+
+
+    const blob =
+        new Blob(
+            [investigationReport],
+            {type:"text/plain"}
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "TRACE-X-Investigation-Report.txt";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* ================= START ================= */
+
+loadData();
+
+fetch("/network")
+.then(r => r.json())
+.then(data => {
+    const box = document.getElementById("networkCorrelation");
+
+    box.innerHTML = data.map(n => `
+        <div style="background:#1e293b;padding:12px;margin:8px 0;border-radius:8px;">
+            <b>Transaction:</b> ${n.txid}<br>
+            <b>Wallet:</b> ${n.wallet}<br>
+            <b>Amount:</b> ${n.amount} BTC<br>
+            <b>Time:</b> ${n.timestamp}<br>
+            <b>Source IP:</b> ${n.src_ip}:${n.src_port}<br>
+            <b>Destination IP:</b> ${n.dst_ip}:${n.dst_port}<br>
+            <b>Correlation:</b> Blockchain transaction linked with network-layer observation.
+        </div>
+    `).join("");
+})
+.catch(() => {
+    document.getElementById("networkCorrelation").innerHTML =
+        "<p>Network correlation data unavailable.</p>";
+});
+fetch("/early-warning")
+.then(r => r.json())
+.then(data => {
+    const box = document.getElementById("earlyWarning");
+
+    if (!data.alerts || data.alerts.length === 0) {
+        box.innerHTML = "<p>✅ No rapid-movement early warnings detected.</p>";
+        return;
+    }
+
+    box.innerHTML = `
+        <p><b>⚠️ Early warnings detected:</b> ${data.count}</p>
+        ${data.alerts.map(a => `
+            <div style="background:#1e293b;padding:12px;margin:8px 0;border-radius:8px;">
+                <b>Wallet:</b> ${a.wallet}<br>
+                <b>Transaction:</b> ${a.txid}<br>
+                <b>Time Gap:</b> ${Number(a.time_gap_minutes).toFixed(2)} minutes<br>
+                <b>Pattern:</b> ${a.pattern}
+            </div>
+        `).join("")}
+    `;
+})
+.catch(() => {
+    document.getElementById("earlyWarning").innerHTML =
+        "<p>Early-warning data unavailable.</p>";
+});
+fetch("/alerts")
+.then(r => r.json())
+.then(alerts => {
+    const box = document.getElementById("investigationAnalytics");
+
+    const total = alerts.length;
+    const critical = alerts.filter(a => a.level === "Critical").length;
+    const high = alerts.filter(a => a.level === "High").length;
+    const medium = alerts.filter(a => a.level === "Medium").length;
+    const low = alerts.filter(a => a.level === "Low").length;
+
+    const averageRisk = total
+        ? (alerts.reduce((sum, a) => sum + Number(a.risk || 0), 0) / total).toFixed(1)
+        : 0;
+
+    box.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+            <div class="card"><b>Total Alerts</b><br>${total}</div>
+            <div class="card"><b>Critical</b><br>${critical}</div>
+            <div class="card"><b>High</b><br>${high}</div>
+            <div class="card"><b>Medium</b><br>${medium}</div>
+            <div class="card"><b>Low</b><br>${low}</div>
+            <div class="card"><b>Average Risk</b><br>${averageRisk}/100</div>
+        </div>
+    `;
+})
+.catch(() => {
+    document.getElementById("investigationAnalytics").innerHTML =
+        "<p>Investigation analytics unavailable.</p>";
+});
 </script>
 
 </body>
 </html>
+
