@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, redirect
 import pandas as pd
 import os
 
@@ -75,12 +75,7 @@ def run_analysis():
 
 @app.route("/")
 def home():
-    return jsonify({
-        "system": "TRACE-X",
-        "status": "Operational",
-        "mode": "Offline"
-    })
-
+    return redirect("/dashboard")
 
 @app.route("/dashboard")
 def dashboard():
