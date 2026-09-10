@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TRACE-X | Crypto Investigation Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .subtitle {
+            margin-top: 6px;
+            color: #cbd5e1;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            padding: 25px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 180px;
+            box-shadow: 0 2px 8px #0001;
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+        }
+
+        .card p {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section {
+            background: white;
+            margin: 0 25px 25px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>TRACE-X</h1>
+    <div class="subtitle">
+        AI-Powered Bitcoin Transaction Investigation & Early Warning
+    </div>
+</header>
+
+<div class="cards">
+    <div class="card">
+        <h3>Total Transactions</h3>
+        <p id="total">-</p>
+    </div>
+
+    <div class="card">
+        <h3>Suspicious</h3>
+        <p id="suspicious">-</p>
+    </div>
+
+    <div class="card">
+        <h3>Critical Alerts</h3>
+        <p id="critical">-</p>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Transaction Intelligence</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>TXID</th>
+                <th>Source IP</th>
+                <th>Wallet</th>
+                <th>Amount</th>
+                <th>Fee</th>
+            </tr>
+        </thead>
+
+        <tbody id="transactions"></tbody>
+    </table>
+</div>
+
+<script>
+fetch("http://127.0.0.1:5000/transactions")
+    .then(response => response.json())
+    .then(data => {
+
+        document.getElementById("total").textContent = data.length;
+
+        document.getElementById("suspicious").textContent = "AI Analysis";
+
+        document.getElementById("critical").textContent = "Risk Engine";
+
+        const table = document.getElementById("transactions");
+
+        data.forEach(tx => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${tx.txid}</td>
+                <td>${tx.src_ip}</td>
+                <td>${tx.input_address}</td>
+                <td>${tx.output_amount}</td>
+                <td>${tx.fee}</td>
+            `;
+
+            table.appendChild(row);
+        });
+    });
+</script>
+
+</body>
+</html>

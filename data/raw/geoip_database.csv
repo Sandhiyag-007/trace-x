@@ -1,0 +1,6 @@
+ip,geo_country,ASN
+10.0.0.1,India,AS1001
+10.0.0.2,India,AS1002
+10.0.0.3,USA,AS2001
+10.0.0.4,Germany,AS3001
+10.0.0.9,Russia,AS4001
